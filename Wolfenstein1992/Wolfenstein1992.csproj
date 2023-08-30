@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Silk.NET.Core" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.GLFW" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Input" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Input.Common" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Input.Glfw" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Input.Sdl" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Maths" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.SDL" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Windowing" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Windowing.Common" Version="2.17.1" />
+      <PackageReference Include="Silk.NET.Windowing.Glfw" Version="2.17.1" />
+      <PackageReference Include="SkiaSharp" Version="2.88.5" />
+      <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.5" />
+      <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Textures\barrel.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\bluestone.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\colorstone.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\eagle.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\greenlight.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\greystone.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\mossy.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\pillar.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\purplestone.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\redbrick.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\walltexture.bmp">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\wood.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>
