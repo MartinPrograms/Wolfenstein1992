@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Drawing;
 using Wolfenstein1992.Gamer;
+using Wolfenstein1992.Gamer.Guns;
 using Wolfenstein1992.Render;
+using Wolfenstein1992.Render.HUD;
 
 namespace Wolfenstein1992;
 
@@ -12,29 +14,38 @@ public class Game
     public byte[] Data;
     public Map map = new Map();
     public Player player = new Player();
+    public GunRenderer gunRenderer = new GunRenderer();
+    public bool lastShotHitEnemy = false;
     public Game(int xWidth, int yHeight)
     {
         Data = new byte[xWidth * yHeight * 4];
         XWidth = xWidth;
         YHeight = yHeight;
+        gunRenderer.Gun = new Rifle();
     }
 
-    public bool CanRender = true;
+    public bool CanRender = false;
+    public bool ForcedRender = false;
 
     public WolfTexture[] Textures = new[]
     {
-        new WolfTexture("Textures/redbrick.png"),
-        new WolfTexture("Textures/walltexture.bmp"),
-        new WolfTexture("Textures/bluestone.png"),
-        new WolfTexture("Textures/greystone.png"),
-        new WolfTexture("Textures/mossy.png"),
-        new WolfTexture("Textures/colorstone.png"),
-        new WolfTexture("Textures/wood.png"),
-        new WolfTexture("Textures/eagle.png")
+        new WolfTexture("Assets/WallTextures/redbrick.png"),
+        new WolfTexture("Assets/WallTextures/walltexture.bmp"),
+        new WolfTexture("Assets/WallTextures/bluestone.png"),
+        new WolfTexture("Assets/WallTextures/greystone.png"),
+        new WolfTexture("Assets/WallTextures/mossy.png"),
+        new WolfTexture("Assets/WallTextures/colorstone.png"),
+        new WolfTexture("Assets/WallTextures/wood.png"),
+        new WolfTexture("Assets/WallTextures/eagle.png")
     };
     public long LastRenderTime = 0; 
-    public unsafe void Render()
+    public void Render()
     {
+        if (!CanRender && !ForcedRender)
+        {
+            return;
+        }
+        ForcedRender = false;
         Stopwatch sw = new Stopwatch();
         sw.Start();
         var colData = Raycaster.Render(this, map, player);

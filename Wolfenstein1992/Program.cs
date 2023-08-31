@@ -2,4 +2,4 @@
 
 using Wolfenstein1992;
 
-new Renderer(1000,1000, "Wolfenstein 1992", 60);
+new Renderer(1200,1000, "Wolfenstein 1992", 60);

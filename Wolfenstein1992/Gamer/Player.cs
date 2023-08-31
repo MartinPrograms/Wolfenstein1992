@@ -7,7 +7,7 @@ public class Player
     public double PlaneX = 0, PlaneY = 0.66; //the 2d raycaster version of camera plane
     
     public double MoveSpeed = 1; //the constant value is in squares/second
-    public double RotSpeed = 1; //the constant value is in radians/second
+    public double RotSpeed = 0.001; //the constant value is in radians/second
 
 
     public void RotateRight(double d)
@@ -28,5 +28,15 @@ public class Player
         double oldPlaneX = PlaneX;
         PlaneX = PlaneX * Math.Cos(RotSpeed * d) - PlaneY * Math.Sin(RotSpeed * d);
         PlaneY = oldPlaneX * Math.Sin(RotSpeed * d) + PlaneY * Math.Cos(RotSpeed * d);
+    }
+
+    public void MouseMove(float deltaX)
+    {
+        double oldDirX = DirX;
+        DirX = DirX * Math.Cos(-deltaX * RotSpeed) - DirY * Math.Sin(-deltaX * RotSpeed);
+        DirY = oldDirX * Math.Sin(-deltaX * RotSpeed) + DirY * Math.Cos(-deltaX * RotSpeed);
+        double oldPlaneX = PlaneX;
+        PlaneX = PlaneX * Math.Cos(-deltaX * RotSpeed) - PlaneY * Math.Sin(-deltaX * RotSpeed);
+        PlaneY = oldPlaneX * Math.Sin(-deltaX * RotSpeed) + PlaneY * Math.Cos(-deltaX * RotSpeed);
     }
 }

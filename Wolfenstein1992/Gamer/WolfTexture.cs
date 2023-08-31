@@ -31,7 +31,14 @@ public class WolfTexture
 
     public Color GetPixel(int texX, int texY)
     {
-        return Data[texX, texY];
+        if(texX < 0 || texX >= Width || texY < 0 || texY >= Height)
+        {
+            return Color.FromArgb(255, 0, 0, 0);
+        }
+        else
+        {
+            return Data[texX, texY];
+        }
     }
 }
 

@@ -69,6 +69,37 @@ public class Renderer
         {
             Game.player.RotateRight(obj);
         }
+
+
+        foreach (var entity in Game.map.Entities)
+        {
+            if(Game.CanRender)
+                entity.Update(Game, obj);
+        }
+
+        if (Game.CanRender)
+        {
+            if (_inputContext.Mice[0].IsButtonPressed(MouseButton.Left))
+            {
+                if (Game.gunRenderer.Gun.canFire)
+                {
+                    Game.gunRenderer.Gun.Fire(Game, Game.player);
+                    Thread animReset = new Thread(() =>
+                    {
+                        Thread.Sleep(200);
+                        Game.gunRenderer.Gun.ResetAnimation();
+                    });
+                    Thread thread = new Thread(() =>
+                    {
+                        Thread.Sleep(Game.gunRenderer.Gun.FireRate);
+                        Game.gunRenderer.Gun.UnFire(Game, Game.player);
+                    });
+
+                    thread.Start();
+                    animReset.Start();
+                }
+            }
+        }
     }
 
     private void OnRender(double obj)
@@ -84,23 +115,72 @@ public class Renderer
 
     private Texture RenderResult;
     public Game Game;
+    private int[,] TempMapData;
     private void ImguiStuff()
     {
+        // ImGui Docking
+        ImGui.BeginMainMenuBar();
+        if (ImGui.BeginMenu("File"))
+        {
+            if (ImGui.MenuItem("Save ImGui Settings"))
+            {
+                ImGui.SaveIniSettingsToDisk("imgui.ini");
+            }
+            if (ImGui.MenuItem("Exit"))
+            {
+                _window.Close();
+            }
+            ImGui.EndMenu();
+        }
+        
+        if (ImGui.BeginMenu("Edit"))
+        {
+            ImGui.EndMenu();
+        }
+        
+        if (ImGui.BeginMenu("View"))
+        {
+            ImGui.EndMenu();
+        }
+        
+        ImGui.EndMainMenuBar();
+
+        ImGui.DockSpaceOverViewport();
+
+        ImGui.Begin("Main");
+        ImGui.Text("Wolfenstein 1992");
+        ImGui.End();
+        
         ImGui.Begin("Render:");
         ImGui.Image((IntPtr)RenderResult._handle, new Vector2(Game.XWidth, Game.YHeight));
         ImGui.End();
         
         ImGui.Begin("Data:");
         ImGui.Checkbox("Can Render", ref Game.CanRender);
+        ImGui.Text("Last Shot Hit Enemy: " + Game.lastShotHitEnemy);
+        if(ImGui.Button("RENDER!"))
+        {
+            Game.ForcedRender = true;
+        }
         ImGui.Text("Loaded map width and height: " + Game.map.Width + ", " + Game.map.Height);
         
         ImGui.Text("Render Time (ms): " + Game.LastRenderTime);
-        ImGui.Text("FPS: " + 1000 / Game.LastRenderTime);
+        ImGui.Text("FPS: " + 1000 / (Game.LastRenderTime+0.01));
         ImGui.Text("Player X: " + Game.player.PosX);
         ImGui.Text("Player Y: " + Game.player.PosY);
-
         ImGui.End();
 
+        ImGui.Begin("Map Editor:");
+        if (Game.CanRender)
+        {
+            ImGui.Text("Disable rendering to edit map");
+        }
+        else
+        {
+            ImGui.Text("Map Width: " + Game.map.Width);
+            ImGui.Text("Map Height: " + Game.map.Height);
+        }
+        ImGui.End();
     }
 
     private void OnLoad()
@@ -110,7 +190,12 @@ public class Renderer
         _imGuiController = new ImGuiController(_gl, _window, _inputContext);
         Game = new Game(800, 800);
         RenderResult = new Texture(_gl, Game.Data, 800, 800);
+        // Enable docking
+        ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
         
+        // Load imgui from file
+        if(File.Exists("imgui.ini"))
+            ImGui.LoadIniSettingsFromDisk("imgui.ini");
         
         _inputContext.Keyboards[0].KeyDown += delegate(IKeyboard keyboard, Key key, int arg3)
         {
@@ -118,6 +203,35 @@ public class Renderer
             {
                 _window.Close();
             }
+
+            if (key == Key.M)
+            {
+                LockMouse = !LockMouse;
+            }
         };
+        
+        _inputContext.Mice[0].MouseMove += OnMouseMove;
+    }
+
+    private bool LockMouse = false;
+    private Vector2 Delta;
+    private Vector2 LastDelta;
+    private Vector2 Middle;
+    private void OnMouseMove(IMouse arg1, Vector2 arg2)
+    {
+        if (LockMouse)
+        {
+            var delta = arg2 - Delta;
+            Delta = arg2;
+            Game.player.MouseMove(delta.X);
+            
+            arg1.Cursor.CursorMode = CursorMode.Hidden;
+            arg1.Position = new Vector2(_window.Size.X / 2, _window.Size.Y / 2);
+            Delta = new Vector2(_window.Size.X / 2, _window.Size.Y / 2);
+        }
+        else
+        {
+            arg1.Cursor.CursorMode = CursorMode.Normal;
+        }
     }
 }
